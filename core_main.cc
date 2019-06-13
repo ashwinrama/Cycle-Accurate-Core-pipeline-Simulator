@@ -25,7 +25,6 @@ int main(void)
         e.executeInstruction(d);
     }
 
-    cout << "end of simulation" << endl;
     //system("pause");
     return 0;
 }

@@ -11,6 +11,7 @@ public:
         cout << "Initializaing Execute" << endl;
         targetPC = initialPC;
         cycleCount = 0;
+        insnCount = 0;
     }
     void executeInstruction(decodeStage &d);
 
@@ -21,7 +22,8 @@ private:
     void printStats(const decodeStage &d) const;
 
     uint64_t cycleCount;
-    const uint16_t pipelineCycles = 2;
+    uint64_t insnCount;
+    uint16_t pipelineCycles = 2;
     const uint16_t LDCycles = 1;
     const uint16_t ALUCycles = 5;
     const uint16_t BRCycles = 1;
@@ -40,12 +42,16 @@ void executeStage::executeInstruction(decodeStage &d)
         d.registerFile[d.RDst] = d.ImmValue;
         targetPC = d.PC + 1;
         cycleCount += pipelineCycles + LDCycles;
+        if (pipelineCycles != 0)
+            pipelineCycles--;
         break;
     case ALU:
         cout << "ADD \t";
         d.registerFile[d.RDst] = d.RSrc0_Value + d.ImmValue;
         targetPC = d.PC + 1;
         cycleCount += pipelineCycles + ALUCycles;
+        if (pipelineCycles != 0)
+            pipelineCycles--;
         break;
     case BR:
         cout << " BR \t";
@@ -53,23 +59,34 @@ void executeStage::executeInstruction(decodeStage &d)
         if ((d.RSrc0_Value ^ d.RSrc1_Value) != 0)
         {
             targetPC = d.PC - d.PC_Offset;
-            cycleCount += pipelineCycles + BRCycles + stallCycles;
+            cycleCount += pipelineCycles + BRCycles;
+            //Reset pipelineCycles
+            pipelineCycles = stallCycles;
         }
         else
         {
             targetPC = d.PC + 1;
             cycleCount += pipelineCycles + BRCycles;
+            if (pipelineCycles != 0)
+                pipelineCycles--;
         }
         break;
 
     case HALT:
         cycleCount += pipelineCycles + 1;
-        cout << "Program encountered HLT at execute.\n End of Simulation" << endl;
+        cout << "HLT" << '\t';
+        insnCount++;
+
+        printStats(d);
+        cout << "\nIPC: Number of Instructions/Cycle Count = " << insnCount << "/" << cycleCount << "=" << (insnCount / static_cast<float>(cycleCount)) << endl;
+        cout << "Program encountered HLT at execute.\nEnd of Simulation" << endl;
         exit(0);
     default:
         cerr << "Unknown Instruction" << endl;
         exit(1);
     }
+    //Number of executed/completed insns.
+    insnCount++;
 }
 
 void executeStage::printStats(const decodeStage &d) const
