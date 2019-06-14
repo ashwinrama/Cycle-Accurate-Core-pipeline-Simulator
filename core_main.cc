@@ -29,6 +29,26 @@ int main(void)
     return 0;
 }
 
+/*
+void riscv_Program(void)
+{
+    fstream programCode;
+    programCode.open("./programASM.txt", ios::out);
+    if (programCode.is_open())
+    {
+        //LDI R1, #4
+        programCode << (4 << 8 | R1 << 4 | LUI) << '\n';
+        //LDI R2, #20
+        programCode << (20 << 8 | R2 << 4 | LUI) << '\n';
+        //ADDI R1, #4
+        programCode << (4 << 12 | R1 << 8 | R1 << 4 | ADDI) << '\n';
+        //BNE R1, R2, #offset  (where, target_address = #PC - #offset)
+        programCode << (1 << 12 | R2 << 8 | R1 << 4 | BNE) << '\n';
+        programCode << (HLT) << '\n';
+        programCode.close();
+    }
+}*/
+
 void writeProgram(void)
 {
     fstream programCode;

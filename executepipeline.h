@@ -23,11 +23,12 @@ private:
 
     uint64_t cycleCount;
     uint64_t insnCount;
-    uint16_t pipelineCycles = 2;
+    uint16_t pipelineCycles = NUM_PIPE_STAGES - 1;
+    //Execution Unit Cycles
     const uint16_t LDCycles = 1;
     const uint16_t ALUCycles = 5;
     const uint16_t BRCycles = 1;
-    const uint16_t stallCycles = 2;
+    const uint16_t stallCycles = NUM_PIPE_STAGES - 1;
 };
 
 void executeStage::executeInstruction(decodeStage &d)
@@ -76,11 +77,12 @@ void executeStage::executeInstruction(decodeStage &d)
         cycleCount += pipelineCycles + 1;
         cout << "HLT" << '\t';
         insnCount++;
-
+        //Display Stats
         printStats(d);
         cout << "\nIPC: Number of Instructions/Cycle Count = " << insnCount << "/" << cycleCount << "=" << (insnCount / static_cast<float>(cycleCount)) << endl;
         cout << "Program encountered HLT at execute.\nEnd of Simulation" << endl;
         exit(0);
+
     default:
         cerr << "Unknown Instruction" << endl;
         exit(1);

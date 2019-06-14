@@ -12,7 +12,8 @@ enum insnType
     HALT = 3
 } insnObj;
 
-const uint16_t NUM_INSN_TYPES = 3;
+const uint16_t NUM_PIPE_STAGES = 5;
+//const uint16_t NUM_INSN_TYPES = 3;
 //LDI RDst, #Value
 const uint16_t LDI = 0x01;
 const uint16_t ADDI = 0x02;
