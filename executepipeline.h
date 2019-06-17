@@ -2,26 +2,31 @@
 #define EXECUTE_H
 #include "core_opcodes.h"
 #include "decodepipeline.h"
+class decodeStage;
+
+typedef struct {
+    uint16_t targetPC = 0;
+    bool stall=0;
+    bool NOP = 0;
+} executeRegister;
 
 class executeStage
 {
 public:
-    executeStage(uint16_t initialPC)
-    {
-        cout << "Initializaing Execute" << endl;
-        targetPC = initialPC;
-        cycleCount = 0;
-        insnCount = 0;
-    }
-    void executeInstruction(decodeStage &d);
+    executeRegister *currentRegister_ptr, *nextRegister_ptr;
+
+    executeStage(void);
+    uint64_t cycleCount;
+    void executeInstruction(decodeStage &d, bool);
+    void updatePipelineRegs(bool, bool);
 
     ~executeStage(){};
-    uint16_t targetPC;
 
 private:
     void printStats(const decodeStage &d) const;
-
-    uint64_t cycleCount;
+    executeRegister pipeReg0, pipeReg1;
+    
+    uint16_t eu_cycles;
     uint64_t insnCount;
     uint16_t pipelineCycles = NUM_PIPE_STAGES - 1;
     //Execution Unit Cycles
@@ -31,83 +36,5 @@ private:
     const uint16_t stallCycles = NUM_PIPE_STAGES - 1;
 };
 
-void executeStage::executeInstruction(decodeStage &d)
-{
-    printStats(d);
 
-    switch (d.functionalUnit)
-    {
-    case LOAD:
-        cout << "LD \t";
-
-        d.registerFile[d.RDst] = d.ImmValue;
-        targetPC = d.PC + 1;
-        cycleCount += pipelineCycles + LDCycles;
-        if (pipelineCycles != 0)
-            pipelineCycles--;
-        break;
-    case ALU:
-        cout << "ADD \t";
-        d.registerFile[d.RDst] = d.RSrc0_Value + d.ImmValue;
-        targetPC = d.PC + 1;
-        cycleCount += pipelineCycles + ALUCycles;
-        if (pipelineCycles != 0)
-            pipelineCycles--;
-        break;
-    case BR:
-        cout << " BR \t";
-
-        if ((d.RSrc0_Value ^ d.RSrc1_Value) != 0)
-        {
-            targetPC = d.PC - d.PC_Offset;
-            cycleCount += pipelineCycles + BRCycles;
-            //Reset pipelineCycles
-            pipelineCycles = stallCycles;
-        }
-        else
-        {
-            targetPC = d.PC + 1;
-            cycleCount += pipelineCycles + BRCycles;
-            if (pipelineCycles != 0)
-                pipelineCycles--;
-        }
-        break;
-
-    case HALT:
-        cycleCount += pipelineCycles + 1;
-        cout << "HLT" << '\t';
-        insnCount++;
-        //Display Stats
-        printStats(d);
-        cout << "\nIPC: Number of Instructions/Cycle Count = " << insnCount << "/" << cycleCount << "=" << (insnCount / static_cast<float>(cycleCount)) << endl;
-        cout << "Program encountered HLT at execute.\nEnd of Simulation" << endl;
-        exit(0);
-
-    default:
-        cerr << "Unknown Instruction" << endl;
-        exit(1);
-    }
-    //Number of executed/completed insns.
-    insnCount++;
-}
-
-void executeStage::printStats(const decodeStage &d) const
-{
-    static bool headerPrint = 0;
-    if (headerPrint == 0)
-    {
-        cout << "EU  Cycles\t PC\t RDst\t Rsrc0_Value\t Rsrc1_Value\t ImmValue\t NextPC\n";
-        headerPrint = 1;
-    }
-    else
-    {
-        cout << cycleCount << '\t';
-        cout << d.PC << '\t';
-        cout << d.RDst << '\t';
-        cout << d.RSrc0_Value << '\t' << '\t';
-        cout << d.RSrc1_Value << '\t' << '\t';
-        cout << d.ImmValue << '\t' << '\t';
-        cout << targetPC << '\n';
-    }
-}
 #endif

@@ -1,40 +1,34 @@
 #ifndef FETCH_H
 #define FETCH_H
 #include "core_opcodes.h"
+#include "executepipeline.h"
+
 #include <vector>
+class executeStage;
+class decodeStage;
+
+typedef struct {
+    uint16_t insnCode;
+    uint16_t PC;
+    uint16_t nextPC;
+} fetchRegister;
 
 class fetchStage
 {
 public:
-    uint16_t insnCode, PC;
-    fetchStage(void);
-    void fetchInstruction(uint16_t target_pc);
+    fetchRegister *currentRegister_ptr, *nextRegister_ptr;
+    fetchStage(uint16_t initialPC);
+    void fetchInstruction(executeStage &e, bool clk);
+    void updatePipelineRegs(bool, bool);
+
     ~fetchStage(){};
 
 private:
+    fetchRegister pipeReg0, pipeReg1;
+    //uint16_t insnCode, PC;
     fstream programCode;
     vector<uint16_t> insnCache;
+
 };
 
-fetchStage::fetchStage(void)
-{
-    uint16_t insn;
-    cout << "Initializing fetch" << endl;
-
-    programCode.open("./programASM.txt", ios::in);
-    if (programCode.is_open())
-    {
-        while (programCode >> insn)
-        {
-            insnCache.push_back(insn);
-        }
-    }
-    programCode.close();
-}
-
-void fetchStage::fetchInstruction(uint16_t targetPC)
-{
-    insnCode = insnCache[targetPC];
-    PC = targetPC;
-}
 #endif

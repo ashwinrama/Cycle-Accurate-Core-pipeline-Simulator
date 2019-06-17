@@ -6,13 +6,15 @@
 using namespace std;
 enum insnType
 {
-    LOAD = 0,
-    ALU = 1,
-    BR = 2,
-    HALT = 3
-} insnObj;
+    LOAD = 1,
+    ALU = 2,
+    BR = 3,
+    HALT = 4,
+    NOP = 5
+};
 
-const uint16_t NUM_PIPE_STAGES = 5;
+
+const uint16_t NUM_PIPE_STAGES = 3;
 //const uint16_t NUM_INSN_TYPES = 3;
 //LDI RDst, #Value
 const uint16_t LDI = 0x01;
@@ -27,6 +29,7 @@ const uint16_t MASK_ADDImmValue = 0xF << 12;
 const uint16_t MASK_BROffset = 0xF << 12;
 const uint16_t MASK_LDImmValue = 0xFF << 8;
 
+const uint16_t R0 = 0x00;
 const uint16_t R1 = 0x01;
 const uint16_t R2 = 0x02;
 const uint16_t R3 = 0x03;
