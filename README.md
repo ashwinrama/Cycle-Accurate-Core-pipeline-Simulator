@@ -1,4 +1,4 @@
-# CPU-Performance-Simulator
+# CPU-Performance-Simulator - CycleAccurate
 Basic C++ based CPU performance simulator (N-stage inorder issue):
 Generates a test ASM code.
 Developed this repo to quickly understand the opcode parsing, pipeline executions and performance stats measurement.
