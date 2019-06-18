@@ -10,9 +10,12 @@ executeStage::executeStage(void){
         insnCount = 0;
 }
 
-void executeStage::executeInstruction(decodeStage &d, bool clk)
+void executeStage::executeInstruction(decodeStage &d)
 {
     printStats(d);
+
+    nextRegister_ptr->NOP = 0;
+    nextRegister_ptr->stall = 0;
 
     if (this->currentRegister_ptr->NOP || d.currentRegister_ptr->functionalUnit==NOP) {
         //Insert NOPeu_cycleseu_cycles
@@ -51,17 +54,16 @@ void executeStage::executeInstruction(decodeStage &d, bool clk)
                 cout << " BR \t";
                 if (currentRegister_ptr->stall == false) {
                     insnCount++;
+                    //New invokation of this EU
+                    eu_cycles = BRCycles;
+                } 
+
+                if (eu_cycles == 1) {
                     if ((d.currentRegister_ptr->RSrc0_Value ^ d.currentRegister_ptr->RSrc1_Value) != 0)
                     {
                         nextRegister_ptr->targetPC = d.currentRegister_ptr->PC   - d.currentRegister_ptr->PC_Offset;
                         nextRegister_ptr->NOP = 1;
                     }
-                    else
-                    {
-                        nextRegister_ptr->NOP = 0;
-                    }
-                    //New invokation of this EU
-                    eu_cycles = BRCycles;
                 }
                 break;
 
@@ -84,8 +86,9 @@ void executeStage::executeInstruction(decodeStage &d, bool clk)
     if (eu_cycles > 1) {
         nextRegister_ptr->stall = 1;
         eu_cycles--;
-    } else 
+    } else {
         nextRegister_ptr->stall = 0;
+    }
 
 cycleCount++;
 }
@@ -110,7 +113,7 @@ void executeStage::printStats(const decodeStage &d) const
     }
 }
 
-void executeStage::updatePipelineRegs(bool clk, bool stall){
+void executeStage::updatePipelineRegs( bool stall){
 
   if (!stall){
     if (clk == 0){
@@ -119,6 +122,7 @@ void executeStage::updatePipelineRegs(bool clk, bool stall){
         } else {
         currentRegister_ptr = &pipeReg1;
         nextRegister_ptr = &pipeReg0;
-        }
+    }
+    clk =!clk;
   }
 }

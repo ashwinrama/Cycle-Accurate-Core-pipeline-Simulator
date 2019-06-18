@@ -22,7 +22,7 @@ fetchStage::fetchStage(uint16_t initialPC)
     nextRegister_ptr = &pipeReg1;
 }
 
-void fetchStage::fetchInstruction(executeStage &e, bool clk)
+void fetchStage::fetchInstruction(executeStage &e)
 {
     if (!e.currentRegister_ptr->NOP) {
         nextRegister_ptr->insnCode = insnCache[currentRegister_ptr->nextPC];
@@ -37,15 +37,16 @@ void fetchStage::fetchInstruction(executeStage &e, bool clk)
 
 }
 
-void fetchStage::updatePipelineRegs(bool clk, bool stall){
+void fetchStage::updatePipelineRegs(bool stall){
 
   if (!stall){
     if (clk == 0){
         currentRegister_ptr = &pipeReg0;
         nextRegister_ptr = &pipeReg1;
-        } else {
+    } else {
         currentRegister_ptr = &pipeReg1;
         nextRegister_ptr = &pipeReg0;
-        }
+    }
+    clk = !clk;
   }
 }

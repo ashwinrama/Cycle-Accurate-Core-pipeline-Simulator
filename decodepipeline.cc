@@ -12,7 +12,7 @@ decodeStage::decodeStage(void) {
 
 }
 
-void decodeStage::decodeInstruction(fetchStage &f, executeStage &e, bool clk) {
+void decodeStage::decodeInstruction(fetchStage &f, executeStage &e) {
     if (e.currentRegister_ptr->NOP) {
         //Insert NOP
         nextRegister_ptr->functionalUnit = NOP;
@@ -57,15 +57,16 @@ void decodeStage::decodeInstruction(fetchStage &f, executeStage &e, bool clk) {
 }
 
 
-void decodeStage::updatePipelineRegs(bool clk, bool stall){
+void decodeStage::updatePipelineRegs(bool stall){
 
   if (!stall){
     if (clk == 0){
         currentRegister_ptr = &pipeReg0;
         nextRegister_ptr = &pipeReg1;
-        } else {
+    } else {
         currentRegister_ptr = &pipeReg1;
         nextRegister_ptr = &pipeReg0;
-        }
+    }
+    clk =!clk;
   }
 }

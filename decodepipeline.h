@@ -16,15 +16,16 @@ class decodeStage
 public:
     uint16_t registerFile[4];
     decodeRegister *currentRegister_ptr, *nextRegister_ptr;
-    
-    decodeStage(void);
-    void updatePipelineRegs(bool, bool);
 
-    void decodeInstruction(fetchStage &f, executeStage &e, bool clk);
+    decodeStage(void);
+    void updatePipelineRegs( bool);
+
+    void decodeInstruction(fetchStage &f, executeStage &e);
     ~decodeStage(){};
 
 private:
     decodeRegister pipeReg0, pipeReg1;
+    bool clk = 1;
 };
 
 #endif
