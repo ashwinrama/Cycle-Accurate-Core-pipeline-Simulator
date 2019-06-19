@@ -8,11 +8,16 @@ executeStage::executeStage(void){
         nextRegister_ptr = &pipeReg1;
         
         insnCount = 0;
+        static bool headerPrint = 0;
+        if (headerPrint == 0)
+        {
+            cout << "EU  Cycles\t PC\t RDst\t Rsrc0_Value\t Rsrc1_Value\t ImmValue\t NextPC\n";
+            headerPrint = 1;
+        }
 }
 
 void executeStage::executeInstruction(decodeStage &d)
 {
-    printStats(d);
 
     nextRegister_ptr->NOP = 0;
     nextRegister_ptr->stall = 0;
@@ -70,6 +75,7 @@ void executeStage::executeInstruction(decodeStage &d)
             case HALT:
                 cout << "HLT" << '\t';
                 insnCount++;
+                cycleCount++;
                 //Display Stats
                 printStats(d);
                 cout << "\nIPC: Number of Instructions/Cycle Count = " << insnCount << "/" << cycleCount << "=" << (insnCount / static_cast<float>(cycleCount)) << endl;
@@ -90,18 +96,16 @@ void executeStage::executeInstruction(decodeStage &d)
         nextRegister_ptr->stall = 0;
     }
 
+
 cycleCount++;
+printStats(d);
+
 }
 
 void executeStage::printStats(const decodeStage &d) const
 {
-    static bool headerPrint = 0;
-    if (headerPrint == 0)
-    {
-        cout << "EU  Cycles\t PC\t RDst\t Rsrc0_Value\t Rsrc1_Value\t ImmValue\t NextPC\n";
-        headerPrint = 1;
-    }
-    else
+
+    
     {
         cout << cycleCount << '\t';
         cout << d.currentRegister_ptr->PC << '\t';

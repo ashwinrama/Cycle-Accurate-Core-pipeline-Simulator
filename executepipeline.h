@@ -33,7 +33,7 @@ private:
     //Execution Unit Cycles
     const uint16_t LDCycles = 1;
     const uint16_t ALUCycles = 5;
-    const uint16_t BRCycles = 2;
+    const uint16_t BRCycles = 3;
     const uint16_t stallCycles = NUM_PIPE_STAGES - 1;
 };
 

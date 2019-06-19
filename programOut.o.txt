@@ -1,19 +1,61 @@
 Initializing fetch
 Initializing decode
 Initializaing Execute
-EU  Cycles       PC      RDst    Rsrc0_Value     Rsrc1_Value     ImmValue        NextPC
-LD      3       1       2       0               0               20              1
-LD      5       2       1       4               0               4               2
-ADD     10      3       1       8               20              4               3
- BR     11      2       1       8               20              4               2
-ADD     18      3       1       12              20              4               3
- BR     20      2       1       12              20              4               2
-ADD     27      3       1       16              20              4               3
- BR     29      2       1       16              20              4               2
-ADD     36      3       1       20              20              4               3
- BR     38      4       1       20              20              4               4
-HLT     39      4       1       20              20              4               4
+EU  Cycles	 PC	 RDst	 Rsrc0_Value	 Rsrc1_Value	 ImmValue	 NextPC
+1	0	0	0		0		0		0
+2	0	0	0		0		0		0
+LD 	3	0	1	0		0		0		0
+LD 	4	1	2	0		0		20		0
+ADD 	5	2	1	0		0		4		0
+ADD 	6	2	1	0		0		4		0
+ADD 	7	2	1	0		0		4		0
+ADD 	8	2	1	0		0		4		0
+ADD 	9	2	1	0		0		4		0
+ BR 	10	3	2	4		20		20		0
+ BR 	11	3	2	4		20		20		0
+ BR 	12	3	2	4		20		20		0
+NOP 	13	4	1	0		0		4		2
+NOP 	14	3	0	0		0		0		0
+ADD 	15	2	1	4		0		4		2
+ADD 	16	2	1	4		0		4		0
+ADD 	17	2	1	4		0		4		2
+ADD 	18	2	1	4		0		4		0
+ADD 	19	2	1	4		0		4		2
+ BR 	20	3	0	8		20		0		0
+ BR 	21	3	0	8		20		0		2
+ BR 	22	3	0	8		20		0		0
+NOP 	23	4	1	4		0		4		2
+NOP 	24	3	0	0		0		0		0
+ADD 	25	2	1	8		0		4		2
+ADD 	26	2	1	8		0		4		0
+ADD 	27	2	1	8		0		4		2
+ADD 	28	2	1	8		0		4		0
+ADD 	29	2	1	8		0		4		2
+ BR 	30	3	0	12		20		0		0
+ BR 	31	3	0	12		20		0		2
+ BR 	32	3	0	12		20		0		0
+NOP 	33	4	1	8		0		4		2
+NOP 	34	3	0	0		0		0		0
+ADD 	35	2	1	12		0		4		2
+ADD 	36	2	1	12		0		4		0
+ADD 	37	2	1	12		0		4		2
+ADD 	38	2	1	12		0		4		0
+ADD 	39	2	1	12		0		4		2
+ BR 	40	3	0	16		20		0		0
+ BR 	41	3	0	16		20		0		2
+ BR 	42	3	0	16		20		0		0
+NOP 	43	4	1	12		0		4		2
+NOP 	44	3	0	0		0		0		0
+ADD 	45	2	1	16		0		4		2
+ADD 	46	2	1	16		0		4		0
+ADD 	47	2	1	16		0		4		2
+ADD 	48	2	1	16		0		4		0
+ADD 	49	2	1	16		0		4		2
+ BR 	50	3	0	20		20		0		0
+ BR 	51	3	0	20		20		0		2
+ BR 	52	3	0	20		20		0		0
+HLT	52	4	1	16		0		4		2
 
-IPC: Number of Instructions/Cycle Count = 11/39=0.282051
+IPC: Number of Instructions/Cycle Count = 13/52=0.25
 Program encountered HLT at execute.
 End of Simulation
